@@ -1,13 +1,9 @@
 machine:
   python: 2.7.12
 
-dependencies:
-  pre:
-    - pip install -U pip
-    - pip install -r requirements/*.txt
-
 test:
   override:
+    - pip install -r requirements/*.txt
     - make docs
   post:
     - mv docs/build/dirhtml $CIRCLE_ARTIFACTS
