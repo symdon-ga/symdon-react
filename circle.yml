@@ -1,5 +1,5 @@
 machine:
-  timezone: Asia/Tokyo
+  python: 2.7.12
 
 dependencies:
   pre:
