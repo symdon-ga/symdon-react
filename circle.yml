@@ -1,9 +1,9 @@
 machine:
-  python: 2.7.12
+  python: 2.7.10
 
 test:
   override:
-    - sudo pip install -r requirements/*.txt
+    - pip install -r requirements/*.txt
     - make docs
   post:
     - mv docs/build/dirhtml $CIRCLE_ARTIFACTS
