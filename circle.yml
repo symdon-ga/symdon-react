@@ -8,6 +8,4 @@ dependencies:
 
 test:
   override:
-    - make docs
-  post:
-    - mv docs/build/dirhtml $CIRCLE_ARTIFACTS
+    - make docs output=$CIRCLE_ARTIFACTS
