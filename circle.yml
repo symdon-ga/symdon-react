@@ -1,6 +1,6 @@
 dependencies:
     override:
-      - python -m ensurepip
+      - pip install -U pip
       - pip install -r requirements/*.txt
 test:
   override:
