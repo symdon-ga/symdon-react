@@ -1,0 +1,5 @@
+dependencies:
+  override:
+    - make docs
+  post:
+    - mv docs/build/dirhtml $CIRCLE_ARTIFACTS
