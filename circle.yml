@@ -11,7 +11,8 @@ test:
     - make docs output=$CIRCLE_ARTIFACTS
 
 deployment:
-  feature:
-    branch: /*/
+  staging:
+    branch: TakesxiSximada-1-design
     commands:
       - curl -L https://circleci.com/api/v1/project/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/$CIRCLE_BUILD_NUM/artifacts | jq '.[0].url'
+        timeout: 1500
