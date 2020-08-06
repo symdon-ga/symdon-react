@@ -1,0 +1,22 @@
+version: "3.7"
+
+services:
+
+  postgres:
+    image: postgres:latest
+    env_file: ./dotenv/postgres.env
+    ports:
+      - 5432:5432
+
+  keycloak:
+    image: jboss/keycloak:7.0.0
+    healthcheck:
+      test: "exit 0"
+    command: "-b 0.0.0.0"
+    env_file: ./dotenv/keycloak.env
+    ports:
+      - 8080:8080
+      - 8543:8543
+      - 10090:10090
+    depends_on:
+      - postgres
