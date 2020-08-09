@@ -1,0 +1,73 @@
+#+CATEGORY: symdon-react
+
+* KeycloakとReactの認証の仕組みを学ぶ
+
+** DONE https://scalac.io/user-authentication-keycloak-1/ を実装する
+SCHEDULED: <2020-08-09 Sun>
+:PROPERTIES:
+:Effort:   34
+:END:
+:LOGBOOK:
+CLOCK: [2020-08-09 Sun 09:59]--[2020-08-09 Sun 11:36] =>  1:37
+:END:
+
+#+BEGIN_EXAMPLE
+簡単にするために、デフォルトのSSLモードである「外部リクエスト」のままにします。つまり、プライベートIPアドレス（localhost、127.0.0.1、192.168.xxなど）を使用している限り、KeycloakはHTTPを介して実行できますが、他のアドレスでの非HTTPS接続は拒否されます。
+#+END_EXAMPLE
+
+http://localhost：8080 /auth/realms/MyDemo/account
+
+#+BEGIN_EXAMPLE
+クライアントのパブリックアクセスタイプを選択したため（したがって、誰でもログインプロセスの開始を要求できます）、これは特に重要です。実際のアプリでは、このパターンをできるだけ制限する必要があります。そうしないと、システムをフィッシング攻撃にさらす可能性があります。ただし、開発目的では、デフォルトのままにしておくことができます。
+#+END_EXAMPLE
+
+| Access Type  | Description                                                                                                                                      |
+|--------------+--------------------------------------------------------------------------------------------------------------------------------------------------|
+| bearer-only  | リクエストに含まれるベアラートークンのみに依存し、自分でログインを開始しないサービス用です。これは通常、バックエンドを保護するために使用されます |
+| confidential | ログインプロセスを開始するためにシークレットを提供する必要がある。                                                                               |
+| public       | フロントベースのブラウザーアプリで秘密を隠す実際の方法がない場合これを固執する必要がある                                                         |
+
+
+#+BEGIN_EXAMPLE json
+{
+  "realm": "MyDemo",
+  "auth-server-url": "http://host.docker.internal:8080/auth",
+  "ssl-required": "external",
+  "resource": "my-react-client",
+  "public-client": true,
+  "confidential-port": 0
+}
+#+END_EXAMPLE
+
+** DONE https://scalac.io/user-authentication-keycloak-2/ を実装する
+SCHEDULED: <2020-08-09 Sun>
+:PROPERTIES:
+:Effort:   89
+:END:
+:LOGBOOK:
+CLOCK: [2020-08-09 Sun 14:53]--[2020-08-09 Sun 22:32] =>  7:39
+:END:
+
+
+#+BEGIN_SRC restclient
+GET http://localhost:8080/auth/realms/MyDemo/protocol/openid-connect/userinfo
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJVOHNSQjExRG90Nkh1VXBtYm9ZR2hVWE1Ed3pEUmgtbEd6RmYxWnZaNERrIn0.eyJqdGkiOiI0ZDgyNTc4Yy1iMDczLTRhOTktOTZlNy05ZWM3YmUxNjIyZDIiLCJleHAiOjE1OTY5NzkwMDksIm5iZiI6MCwiaWF0IjoxNTk2OTc4NzA5LCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODAvYXV0aC9yZWFsbXMvTXlEZW1vIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjBlOTBmZDMwLTE5MDAtNGY3Ni04Y2Q5LWIyMDg5ZTQyNGRlNCIsInR5cCI6IkJlYXJlciIsImF6cCI6Im15LXJlYWN0LWNsaWVudCIsIm5vbmNlIjoiYWI1ZmYzYzAtYzg1Yi00MzQ2LTgxNWYtZDQ3ZDJlMjgyZjA5IiwiYXV0aF90aW1lIjoxNTk2OTc3ODEzLCJzZXNzaW9uX3N0YXRlIjoiYmI4YzQ0NjYtMTMxMC00MjFiLWJmZmMtYWZkODY5ZmUyMThhIiwiYWNyIjoiMCIsImFsbG93ZWQtb3JpZ2lucyI6WyJodHRwOi8vbG9jYWxob3N0OjMwMDAiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJqb2huIn0.LVAOFVzS5g84uTw39ixKYL1rPPwkarU68XB3RtaMgCWcak1DrUu0HXTFYZDzmUk7uxETbRcLJ2wCdiEB6o86PDEVvyPL43CW-EbSu-Mlcfp1Wkn61u5Hi6jPcQVXBG-tVISTKBCoatewAYym-cGeHBazOna15yso78saNMdkilYEe2FX2IBvgLN3CjS3VWks71Alm2sDP1zji0kCrC_Ds5MQk7qUoIXib-P8ykHsz8EIS5PUmMNmfBMOUSNfwfA3UVElE27-oFeYBYZ9M7N016oTsGuEVpCRX05OYzrNW5qu30P84QcTX93cHlKr1MXK-ibDv6a584PBnAiIhKVPgg
+
+#+END_SRC
+
+#+RESULTS:
+#+BEGIN_SRC js
+{
+  "sub": "0e90fd30-1900-4f76-8cd9-b2089e424de4",
+  "email_verified": false,
+  "preferred_username": "john"
+}
+// GET http://localhost:8080/auth/realms/MyDemo/protocol/openid-connect/userinfo
+// HTTP/1.1 200 OK
+// Connection: keep-alive
+// Cache-Control: no-cache
+// Content-Type: application/json
+// Content-Length: 97
+// Date: Sun, 09 Aug 2020 13:12:03 GMT
+// Request duration: 0.030878s
+#+END_SRC
