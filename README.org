@@ -1,8 +1,124 @@
 #+CATEGORY: symdon-react
 
-* KeycloakとReactの認証の仕組みを学ぶ
+* 起動方法
 
-** DONE https://scalac.io/user-authentication-keycloak-1/ を実装する
+Middleware
+#+BEGIN_EXAMPLE
+docker-compose up
+#+END_EXAMPLE
+
+Application
+#+BEGIN_EXAMPLE
+foreman start
+#+END_EXAMPLE
+
+* 構成図
+
+#+BEGIN_EXAMPLE
+        +-------+
+        |browser|
+        +---+---+
+            |
+            |
+            |      +--------------------------+
+            |      | react-script dev server  |
+            |      |                          |
+            |      |    +--------------+      |
+            +-----------|keycloak-react|      |
+            |      |    +--------------+      |
+            |      +--------------------------+
+            |
+            |       +-----------------+
+            |       |docker-compose   |
+            |       |                 |
+            |       |   +--------+    |
+            +-----------|keycloak|    |
+            |       |   +--------+    |
+            |       +-----------------+
+            |
+            |       +----------------+
+            +-------|server.py(flask)|
+                    +----------------+
+#+END_EXAMPLE
+
+* シーケンス図
+
+#+BEGIN_EXAMPLE
+
+ +-------+               +--------------+             +--------+          +----------+
+ |browser|               |keycloak-react|             |keycloak|          |server.py |
+ +-------+               +--------------+             +--------+          +----------+
+     |                          |                         |                   |
+     |     GET                  |                         |                   |
+     |------------------------->|                         |                   |
+     |                          |                         |                   |
+     |     Response             |                         |                   |
+     |     ページの返却         |                         |                   |
+     |<-------------------------|                         |                   |
+     |                          |                         |                   |
+     |--------+                 |                         |                   |
+     |        | ログイン開始    |                         |                   |
+     |<-------+                 |                         |                   |
+     |                          |                         |                   |
+     |     GET                  |                         |                   |
+     |--------------------------------------------------->|                   |
+     |                          |                         |                   |
+     |    Response              |                         |                   |
+     |<---------------------------------------------------|                   |
+     |                          |                         |                   |
+     |    POST                  |                         |                   |
+     |--------------------------------------------------->|                   |
+     |                          |                         |                   |
+     |       Redirect           |                         |                   |
+     |        - state           |                         |                   |
+     |        - code            |                         |                   |
+     |<---------------------------------------------------|                   |
+     |                          |                         |                   |
+     |  GET                     |                         |                   |
+     |------------------------->|                         |                   |
+     |                          |                         |                   |
+     |     Response             |                         |                   |
+     |<-------------------------|                         |                   |
+     |                          |                         |                   |
+     |  POST                    |                         |                   |
+     |      get token           |                         |                   |
+     |--------------------------------------------------->|                   |
+     |                          |                         |                   |
+     |  Response                |                         |                   |
+     |     token                |                         |                   |
+     |<---------------------------------------------------|                   |
+     |                          |                         |                   |
+     |  GET /userinfo           |                         |                   |
+     |  Authorization: Bearer   |                         |                   |
+     |--------------------------------------------------->|                   |
+     |                          |                         |                   |
+     |  Response:               |                         |                   |
+     |<---------------------------------------------------|                   |
+     |                          |                         |                   |
+     |  GET                     |                         |                   |
+     |  Authorization: Bearer   |                         |                   |
+     |----------------------------------------------------------------------->|
+     |                          |                         |                   |
+     |                          |                         |                   |
+     |                          |                         |  GET              |
+     |                          |                         |<------------------|
+     |                          |                         |                   |
+     |                          |                         |                   |
+     |                          |                         |  Response         |
+     |                          |                         |------------------>|
+     |                          |                         |                   |
+     |                          |                         |                   |
+     |  Response                |                         |                   |
+     |<-----------------------------------------------------------------------|
+     |                          |                         |                   |
+     |                          |                         |                   |
+     |                          |                         |                   |
+#+END_EXAMPLE
+
+* Tasks
+** DONE KeycloakとReactの認証の仕組みを実装する
+
+*** DONE https://scalac.io/user-authentication-keycloak-1/ を実装する
 SCHEDULED: <2020-08-09 Sun>
 :PROPERTIES:
 :Effort:   34
@@ -39,7 +155,7 @@ http://localhost：8080 /auth/realms/MyDemo/account
 }
 #+END_EXAMPLE
 
-** DONE https://scalac.io/user-authentication-keycloak-2/ を実装する
+*** DONE https://scalac.io/user-authentication-keycloak-2/ を実装する
 SCHEDULED: <2020-08-09 Sun>
 :PROPERTIES:
 :Effort:   89
@@ -71,3 +187,12 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJVOHNSQj
 // Date: Sun, 09 Aug 2020 13:12:03 GMT
 // Request duration: 0.030878s
 #+END_SRC
+
+** DONE READMEをまとめる
+SCHEDULED: <2020-08-10 Mon>
+
+- [X] 起動方法
+- [X] 構成図
+- [X] シーケンス図
+
+
